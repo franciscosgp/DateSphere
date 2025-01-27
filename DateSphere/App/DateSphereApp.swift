@@ -9,17 +9,6 @@ import SwiftUI
 struct DateSphereApp: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-
-    /*var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .onAppear {
-                    ParseManager().initialize()
-                }
-        }
-    }*/
-
-    /// Coordinador principal, se encarga del flujo global de la app
     @StateObject private var coordinator = MainCoordinator()
 
     var body: some Scene {

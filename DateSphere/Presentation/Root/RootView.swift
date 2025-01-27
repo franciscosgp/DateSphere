@@ -5,6 +5,8 @@
 
 import SwiftUI
 
+// MARK: RootView
+
 struct RootView: View {
 
     // MARK: Variables
@@ -21,13 +23,18 @@ struct RootView: View {
 
     var body: some View {
         NavigationStack(path: $viewModel.coordinator.path) {
-            VStack {
+            ZStack {
                 if viewModel.loading {
                     getLoadingView()
-                } else if let error = viewModel.error {
+                }
+                if let error = viewModel.error {
                     getErrorView(error: error)
                 } else if viewModel.events.isEmpty {
-                    getErrorView(error: RootError.noEvents)
+                    if viewModel.loading {
+                        EmptyView()
+                    } else {
+                        getErrorView(error: RootError.noEvents)
+                    }
                 } else {
                     List {
                         ForEach(viewModel.events) { event in
@@ -36,6 +43,7 @@ struct RootView: View {
                             } label: {
                                 getView(event: event)
                             }
+                            .buttonStyle(.plain)
                             .swipeActions(edge: .trailing) {
                                 Button {
                                     viewModel.onDeleteButtonTapped(event: event)
@@ -55,16 +63,16 @@ struct RootView: View {
                     .refreshable {
                         viewModel.loadEvents()
                     }
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
-                                viewModel.onAddButtonTapped()
-                            } label: {
-                                Image(systemName: "plus")
-                                    .font(.title2)
-                                    .foregroundColor(.accentColor)
-                            }
-                        }
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        viewModel.onAddButtonTapped()
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title2)
+                            .foregroundColor(.accentColor)
                     }
                 }
             }
