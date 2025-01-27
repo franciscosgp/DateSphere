@@ -21,6 +21,11 @@ final class RootViewModel: ObservableObject {
 
     // MARK: Variables
 
+    @Published var path = NavigationPath() {
+        didSet {
+            coordinator.path = path
+        }
+    }
     @Published var loading: Bool = false
     @Published var events: [EventDomainModel] = []
     @Published var error: Error?
@@ -31,6 +36,7 @@ final class RootViewModel: ObservableObject {
         self.coordinator = coordinator
         self.getEventsUseCase = getEventsUseCase
         self.deleteEventUseCase = deleteEventUseCase
+        coordinator.$path.assign(to: &$path)
     }
 
     // MARK: Methods

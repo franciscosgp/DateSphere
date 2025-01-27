@@ -41,7 +41,7 @@ struct IconPickerView: View {
     // MARK: Body
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(filteredSymbols, id: \.self) { symbol in

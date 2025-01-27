@@ -12,7 +12,7 @@ final class MainCoordinator: Coordinator {
 
     // MARK: Destination enum
 
-    enum Destination {
+    enum Destination: Hashable {
 
         // MARK: Cases
 

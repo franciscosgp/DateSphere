@@ -22,7 +22,7 @@ struct RootView: View {
     // MARK: Body
 
     var body: some View {
-        NavigationStack(path: $viewModel.coordinator.path) {
+        NavigationStack(path: $viewModel.path) {
             ZStack {
                 if viewModel.loading {
                     getLoadingView()
