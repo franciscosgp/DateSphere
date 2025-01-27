@@ -10,6 +10,7 @@ protocol EventRepository {
     // MARK: Methods
 
     func getEvents() async throws -> [EventDomainModel]
+    func getEvent(by objectId: String) async throws -> EventDomainModel
     func addOrUpdateEvent(_ event: EventDomainModel) async throws -> EventDomainModel
     func deleteEvent(_ event: EventDomainModel) async throws
 

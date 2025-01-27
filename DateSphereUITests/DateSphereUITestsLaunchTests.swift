@@ -2,8 +2,6 @@
 //  DateSphereUITestsLaunchTests.swift
 //  DateSphereUITests
 //
-//  Created by Francisco Gómez Pino on 27/1/25.
-//
 
 import XCTest
 

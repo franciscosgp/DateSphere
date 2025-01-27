@@ -19,6 +19,12 @@ final actor EventDataSource: EventRepository {
             .map { try $0.parseToDomainModel() }
     }
 
+    func getEvent(by objectId: String) async throws -> EventDomainModel {
+        return try await EventDataModel(objectId: objectId)
+            .fetch()
+            .parseToDomainModel()
+    }
+
     func addOrUpdateEvent(_ event: EventDomainModel) async throws -> EventDomainModel {
         if event.objectId == nil {
             return try await EventDataModel(with: event)

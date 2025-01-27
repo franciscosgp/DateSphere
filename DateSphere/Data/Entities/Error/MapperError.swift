@@ -5,18 +5,12 @@
 
 // MARK: - MapperError enum
 
-enum MapperError: Error {
+enum MapperError: AppError {
 
     // MARK: Cases
 
     case notAllowed(parameter: String)
     case required(parameter: String)
-
-}
-
-// MARK: - [Extension] CustomStringConvertible
-
-extension MapperError: CustomStringConvertible {
 
     // MARK: Variables
 

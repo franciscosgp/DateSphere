@@ -11,6 +11,15 @@ import UIKit.UIColor
 
 extension Color {
 
+    // MARK: Variables
+
+    var isFullyTransparent: Bool {
+        let uiColor = UIColor(self)
+        var alpha: CGFloat = 0
+        uiColor.getRed(nil, green: nil, blue: nil, alpha: &alpha)
+        return alpha == 0
+    }
+
     // MARK: Initializers
 
     init?(hex: String?) {

@@ -2,8 +2,6 @@
 //  DateSphereTests.swift
 //  DateSphereTests
 //
-//  Created by Francisco Gómez Pino on 27/1/25.
-//
 
 import Testing
 @testable import DateSphere

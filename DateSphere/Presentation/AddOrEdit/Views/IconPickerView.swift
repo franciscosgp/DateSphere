@@ -3,8 +3,8 @@
 //  DateSphere
 //
 
-import SwiftUI
 import SFSafeSymbols
+import SwiftUI
 
 // MARK: Icon Picker View
 
@@ -96,8 +96,8 @@ struct IconPickerView: View {
 
 // MARK: Preview
 
-struct IconPickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        IconPickerView(selectedIcon: .constant("heart.fill"))
-    }
+#if DEBUG
+#Preview {
+    IconPickerView(selectedIcon: .constant("heart.fill"))
 }
+#endif

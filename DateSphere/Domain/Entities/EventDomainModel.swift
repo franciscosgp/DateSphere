@@ -8,7 +8,7 @@ import SwiftUICore
 
 // MARK: - EventDomainModel struct
 
-struct EventDomainModel: Sendable {
+struct EventDomainModel: Hashable, Equatable, Sendable {
 
     // MARK: Variables
 
@@ -20,9 +20,18 @@ struct EventDomainModel: Sendable {
     let backgroundColor: Color?
     let date: Date
 
-    var icon: Image? {
-        guard let iconName else { return nil }
-        return Image(systemName: iconName)
+    var message: String {
+        if date.isToday {
+            return "HOY"
+        } else if date.isInFuture {
+            return "Quedan \(date.numberOfDays) días"
+        } else {
+            return "Hace \(date.numberOfDays) días"
+        }
+    }
+
+    var icon: Image {
+        return Image(systemName: iconName ?? "questionmark")
     }
 
 }
