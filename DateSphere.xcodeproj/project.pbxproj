@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B747E112D4E42AB00FDA124 /* DSComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 0B747E102D4E42AB00FDA124 /* DSComponents */; };
 		0BBAFE1B2D477E2C00D67F59 /* ParseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0BBAFE1A2D477E2C00D67F59 /* ParseSwift */; };
 		0BBAFE1E2D477E3A00D67F59 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = 0BBAFE1D2D477E3A00D67F59 /* SFSafeSymbols */; };
 		0BBAFE212D477E4B00D67F59 /* FLEX in Frameworks */ = {isa = PBXBuildFile; productRef = 0BBAFE202D477E4B00D67F59 /* FLEX */; };
@@ -35,7 +36,25 @@
 		0BBAFE062D477D6D00D67F59 /* DateSphereUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DateSphereUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0B747E0E2D4E429A00FDA124 /* Exceptions for "Modules" folder in "DateSphere" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DSComponents,
+			);
+			target = 0BBAFDEB2D477D6B00D67F59 /* DateSphere */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		0B747E0D2D4E429A00FDA124 /* Modules */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0B747E0E2D4E429A00FDA124 /* Exceptions for "Modules" folder in "DateSphere" target */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
 		0BBAFDEE2D477D6B00D67F59 /* DateSphere */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DateSphere;
@@ -59,6 +78,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BBAFE1E2D477E3A00D67F59 /* SFSafeSymbols in Frameworks */,
+				0B747E112D4E42AB00FDA124 /* DSComponents in Frameworks */,
 				0BBAFE1B2D477E2C00D67F59 /* ParseSwift in Frameworks */,
 				0BBAFE212D477E4B00D67F59 /* FLEX in Frameworks */,
 			);
@@ -81,12 +101,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B747E0F2D4E42AB00FDA124 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0BBAFDE32D477D6B00D67F59 = {
 			isa = PBXGroup;
 			children = (
 				0BBAFDEE2D477D6B00D67F59 /* DateSphere */,
+				0B747E0D2D4E429A00FDA124 /* Modules */,
 				0BBAFDFF2D477D6D00D67F59 /* DateSphereTests */,
 				0BBAFE092D477D6D00D67F59 /* DateSphereUITests */,
+				0B747E0F2D4E42AB00FDA124 /* Frameworks */,
 				0BBAFDED2D477D6B00D67F59 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -117,6 +146,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				0B747E0D2D4E429A00FDA124 /* Modules */,
 				0BBAFDEE2D477D6B00D67F59 /* DateSphere */,
 			);
 			name = DateSphere;
@@ -124,6 +154,7 @@
 				0BBAFE1A2D477E2C00D67F59 /* ParseSwift */,
 				0BBAFE1D2D477E3A00D67F59 /* SFSafeSymbols */,
 				0BBAFE202D477E4B00D67F59 /* FLEX */,
+				0B747E102D4E42AB00FDA124 /* DSComponents */,
 			);
 			productName = DateSphere;
 			productReference = 0BBAFDEC2D477D6B00D67F59 /* DateSphere.app */;
@@ -618,6 +649,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0B747E102D4E42AB00FDA124 /* DSComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DSComponents;
+		};
 		0BBAFE1A2D477E2C00D67F59 /* ParseSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0BBAFE192D477E2C00D67F59 /* XCRemoteSwiftPackageReference "Parse-Swift" */;

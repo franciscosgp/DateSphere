@@ -3,6 +3,7 @@
 //  DateSphere
 //
 
+import DSComponents
 import SwiftUI
 
 // MARK: AddOrEdit view
@@ -112,32 +113,9 @@ struct AddOrEditView: View {
 
     @ViewBuilder
     func getErrorView(error: Error) -> some View {
-
-        Image(systemName: "exclamationmark.triangle")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 100, height: 100)
-            .padding()
-
-        Text("Se ha producido un error")
-            .font(.title2)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal)
-
-        Text(error.localizedDescription)
-            .font(.title3)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal)
-            .padding(.top, 2)
-
-        Button("Volver") {
-            viewModel.cleanError()
-        }
-        .buttonStyle(.borderedProminent)
-        .padding()
-
+        DSFeedbackView(message: error.message,
+                       button: .init(title: "Volver",
+                                     action: viewModel.cleanError))
     }
 
 }
