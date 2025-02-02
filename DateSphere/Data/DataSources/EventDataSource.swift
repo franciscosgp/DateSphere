@@ -13,6 +13,7 @@ final actor EventDataSource: EventRepository {
     // MARK: Methods
 
     func getEvents() async throws -> [EventDomainModel] {
+        try await NetworkMonitor.shared.checkNetworkConnection()
         return try await EventDataModel.query()
             .order([.ascending("date")])
             .find()
@@ -20,12 +21,14 @@ final actor EventDataSource: EventRepository {
     }
 
     func getEvent(by objectId: String) async throws -> EventDomainModel {
+        try await NetworkMonitor.shared.checkNetworkConnection()
         return try await EventDataModel(objectId: objectId)
             .fetch()
             .parseToDomainModel()
     }
 
     func addOrUpdateEvent(_ event: EventDomainModel) async throws -> EventDomainModel {
+        try await NetworkMonitor.shared.checkNetworkConnection()
         if event.objectId == nil {
             return try await EventDataModel(with: event)
                 .save()
@@ -40,6 +43,7 @@ final actor EventDataSource: EventRepository {
     }
 
     func deleteEvent(_ event: EventDomainModel) async throws {
+        try await NetworkMonitor.shared.checkNetworkConnection()
         try await EventDataModel(objectId: event.objectId)
             .delete()
     }

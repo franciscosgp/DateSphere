@@ -13,6 +13,7 @@ final actor InstallationDataSource: InstallationRepository {
     // MARK: Methods
 
     func registerInstallation(with token: Data?) async throws {
+        try await NetworkMonitor.shared.checkNetworkConnection()
         var installation = InstallationDataModel.current
         installation?.channels = Constants.Global.notificationChannels
         if let token {

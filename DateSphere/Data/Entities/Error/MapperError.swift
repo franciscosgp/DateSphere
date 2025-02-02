@@ -17,9 +17,9 @@ enum MapperError: AppError {
     var description: String {
         switch self {
         case .notAllowed(let parameter):
-            return "\(parameter) is not allowed"
+            return String(format: "parameter_not_allowed".localized, parameter).capitalized
         case .required(let parameter):
-            return "\(parameter) is required"
+            return String(format: "parameter_required".localized, parameter).capitalized
         }
     }
 

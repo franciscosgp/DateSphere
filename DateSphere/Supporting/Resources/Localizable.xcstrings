@@ -352,6 +352,23 @@
         }
       }
     },
+    "no_connection_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No internet connection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay conexión a internet"
+          }
+        }
+      }
+    },
     "no_events" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -382,6 +399,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puedes añadir uno pulsando en el botón \"+\"."
+          }
+        }
+      }
+    },
+    "parameter_not_allowed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is not allowed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ no está permitido"
+          }
+        }
+      }
+    },
+    "parameter_required" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is required"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ es requerido"
           }
         }
       }
@@ -465,7 +516,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Hoy"
           }
         }
@@ -482,7 +533,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Mañana"
           }
         }
@@ -499,7 +550,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Ayer"
           }
         }
