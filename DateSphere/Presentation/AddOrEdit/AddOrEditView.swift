@@ -12,6 +12,8 @@ struct AddOrEditView: View {
 
     // MARK: Variables
 
+    @Environment(\.dismiss) private var dismiss
+
     @ObservedObject var viewModel: AddOrEditViewModel
     @State private var showIconPicker = false
 
@@ -24,22 +26,17 @@ struct AddOrEditView: View {
     // MARK: Body
 
     var body: some View {
-        if viewModel.loading {
-            getLoadingView()
-        } else if let error = viewModel.error {
-            getErrorView(error: error)
-        } else {
-
+        NavigationStack {
             Form {
 
-                Section(header: Text("Información")) {
+                Section(header: Text("information")) {
 
-                    TextField("Nombre del evento", text: $viewModel.name)
+                    TextField("event_name", text: $viewModel.name)
                         .padding(.horizontal, 4)
 
                     ZStack(alignment: .topLeading) {
                         if viewModel.description.isEmpty {
-                            Text("Descripción del evento")
+                            Text("event_description")
                                 .foregroundColor(Color(UIColor.placeholderText))
                                 .padding(.horizontal, 4)
                                 .padding(.vertical, 8)
@@ -50,72 +47,72 @@ struct AddOrEditView: View {
 
                 }
 
-                Section(header: Text("Icono")) {
+                Section(header: Text("icon")) {
                     HStack {
                         Spacer()
-                        Circle()
-                            .fill(viewModel.iconName == nil ? Color.gray.opacity(0.2) : viewModel.backgroundColor)
-                            .frame(width: 120, height: 120)
-                            .overlay {
-                                if let iconName = viewModel.iconName {
-                                    Image(systemName: iconName)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 60, height: 60, alignment: .center)
-                                        .foregroundStyle(viewModel.foregroundColor)
-                                } else {
-                                    Text("Sin icono")
-                                }
-                            }
-                            .onTapGesture {
-                                showIconPicker.toggle()
-                            }
+                        Button(action: {
+                            showIconPicker.toggle()
+                        }) {
+                            DSIconView(systemSymbolName: $viewModel.iconName,
+                                       mainColor: $viewModel.mainColor,
+                                       secondaryColor: $viewModel.secondaryColor,
+                                       backgroundColor: $viewModel.backgroundColor,
+                                       noIconText: "select_icon".localized)
+                        }
                         Spacer()
                     }
-                    Button("Seleccionar icono") {
-                        showIconPicker.toggle()
-                    }
-                    ColorPicker("Color principal", selection: $viewModel.foregroundColor, supportsOpacity: false)
-                    ColorPicker("Color de fondo", selection: $viewModel.backgroundColor, supportsOpacity: true)
+                    ColorPicker("main_color", selection: $viewModel.mainColor, supportsOpacity: false)
+                    ColorPicker("secondary_color", selection: $viewModel.secondaryColor, supportsOpacity: true)
+                    ColorPicker("background_color", selection: $viewModel.backgroundColor, supportsOpacity: true)
 
                 }
 
-                    // Sección de fecha
-                Section(header: Text("Fecha")) {
-                    DatePicker("Fecha del evento", selection: $viewModel.date, displayedComponents: .date)
+                Section(header: Text("date")) {
+                    DatePicker("event_date", selection: $viewModel.date, displayedComponents: .date)
                 }
 
             }
+            .disabled(viewModel.isLoading)
             .scrollDismissesKeyboard(.immediately)
-            .navigationTitle(viewModel.event == nil ? "Nuevo evento" : "Editar evento")
+            .navigationTitle(viewModel.event == nil ? "new_event" : "edit_event")
             .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("close") {
+                        dismiss()
+                    }.disabled(viewModel.isLoading)
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Guardar") {
-                        viewModel.addOrUpdateEvent()
+                    if viewModel.isLoading {
+                        DSLoadingView(size: .small)
+                    } else {
+                        Button("save") {
+                            viewModel.addOrUpdateEvent()
+                        }
                     }
                 }
             }
             .sheet(isPresented: $showIconPicker) {
-                IconPickerView(selectedIcon: $viewModel.iconName)
+                DSIconPickerView(selectedIcon: $viewModel.iconName)
                     .presentationDetents([.fraction(0.7)])
             }
+            .alert("alert_error_title", isPresented: $viewModel.isFailed) {
+                Button("close", role: .cancel, action: viewModel.clearState)
+            } message: {
+                if let error = viewModel.error {
+                    Text(error.message)
+                        .lineLimit(4)
+                        .font(.title3)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
+                }
+            }
+            .onChange(of: viewModel.isSaved) { isSaved in
+                if isSaved {
+                    dismiss()
+                }
+            }
         }
-    }
 
-    // MARK: Methods
-
-    @ViewBuilder
-    func getLoadingView() -> some View {
-        ProgressView()
-            .progressViewStyle(.circular)
-            .scaleEffect(2)
-    }
-
-    @ViewBuilder
-    func getErrorView(error: Error) -> some View {
-        DSFeedbackView(message: error.message,
-                       button: .init(title: "Volver",
-                                     action: viewModel.cleanError))
     }
 
 }
@@ -125,11 +122,9 @@ struct AddOrEditView: View {
     NavigationStack {
         AddOrEditView(
             viewModel: AddOrEditViewModel(
-                coordinator: MainCoordinator(),
                 event: nil,
-                useCase: AddOrUpdateEventUseCase(
-                    eventRepository: EventDataSourceMock()
-                )
+                useCase: .init(eventRepository: EventDataSourceMock()),
+                saveAction: { _ in }
             )
         )
     }

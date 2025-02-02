@@ -11,10 +11,6 @@ import SwiftUI
 @MainActor
 final class DetailViewModel: ObservableObject {
 
-    // MARK: Coordinator
-
-    unowned var coordinator: any Coordinator
-
     // MARK: Dependencies
 
     private let getEventUseCase: GetEventUseCase?
@@ -27,14 +23,12 @@ final class DetailViewModel: ObservableObject {
 
     // MARK: Initializers
 
-    init(coordinator: any Coordinator, objectId: String, useCase: GetEventUseCase) {
-        self.coordinator = coordinator
+    init(objectId: String, useCase: GetEventUseCase) {
         self.getEventUseCase = useCase
         self.objectId = objectId
     }
 
-    init(coordinator: any Coordinator, event: EventDomainModel) {
-        self.coordinator = coordinator
+    init(event: EventDomainModel) {
         self.getEventUseCase = nil
         self.objectId = event.objectId ?? event.id
         self.event = event

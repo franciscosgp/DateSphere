@@ -16,22 +16,23 @@ struct EventDomainModel: Hashable, Equatable, Sendable {
     let name: String
     let description: String?
     let iconName: String?
-    let foregroundColor: Color?
+    let mainColor: Color?
+    let secondaryColor: Color?
     let backgroundColor: Color?
     let date: Date
 
     var message: String {
         if date.isToday {
-            return "HOY"
+            return "today".localized
+        } else if date.isTomorrow {
+            return "tomorrow".localized
+        } else if date.isYesterday {
+            return "yesterday".localized
         } else if date.isInFuture {
-            return "Quedan \(date.numberOfDays) días"
+            return String(format: "days_left".localized, String(date.numberOfDays))
         } else {
-            return "Hace \(date.numberOfDays) días"
+            return String(format: "days_ago".localized, String(date.numberOfDays))
         }
-    }
-
-    var icon: Image {
-        return Image(systemName: iconName ?? "questionmark")
     }
 
 }
@@ -54,12 +55,13 @@ extension EventDomainModel {
 
     // MARK: Initializers
 
-    init(name: String, description: String?, iconName: String?, foregroundColor: Color?, backgroundColor: Color?, date: Date) {
+    init(name: String, description: String?, iconName: String?, mainColor: Color?, secondaryColor: Color?, backgroundColor: Color?, date: Date) {
         self.objectId = nil
         self.name = name
         self.description = description
         self.iconName = iconName
-        self.foregroundColor = foregroundColor
+        self.mainColor = mainColor
+        self.secondaryColor = secondaryColor
         self.backgroundColor = backgroundColor
         self.date = date
     }

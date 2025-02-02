@@ -9,13 +9,18 @@ import SwiftUI
 struct DateSphereApp: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @StateObject private var coordinator = MainCoordinator()
+    @StateObject var viewModel = RootViewModel(eventRepository: EventDataSource())
 
     var body: some Scene {
         WindowGroup {
-            coordinator.start()
+            RootView(viewModel: viewModel)
                 .onAppear {
-                    coordinator.setup()
+                    ParseManager().initialize()
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .openFromNotification)) { notification in
+                    if let eventId = (notification.object as? [String: Any])?["eventId"] as? String {
+                        viewModel.showEvent(objectId: eventId)
+                    }
                 }
         }
     }

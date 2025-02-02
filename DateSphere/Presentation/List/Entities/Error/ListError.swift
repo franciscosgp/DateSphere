@@ -1,11 +1,11 @@
 //
-//  RootError.swift
+//  ListError.swift
 //  DateSphere
 //
 
-// MARK: - RootError enum
+// MARK: - ListError enum
 
-enum RootError: AppError {
+enum ListError: AppError {
 
     // MARK: Cases
 
@@ -13,10 +13,10 @@ enum RootError: AppError {
 
     // MARK: Variables
 
-    var description: String {
+    var errorDescription: String? {
         switch self {
         case .noEvents:
-            return "No hay eventos"
+            return "no_events".localized
         }
     }
 

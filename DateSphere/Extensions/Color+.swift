@@ -13,7 +13,7 @@ extension Color {
 
     // MARK: Variables
 
-    var isFullyTransparent: Bool {
+    var isClear: Bool {
         let uiColor = UIColor(self)
         var alpha: CGFloat = 0
         uiColor.getRed(nil, green: nil, blue: nil, alpha: &alpha)

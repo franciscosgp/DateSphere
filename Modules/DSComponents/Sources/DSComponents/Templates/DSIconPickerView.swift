@@ -1,6 +1,6 @@
 //
 //  IconPickerView.swift
-//  DateSphere
+//  DSComponents
 //
 
 import SFSafeSymbols
@@ -8,11 +8,12 @@ import SwiftUI
 
 // MARK: Icon Picker View
 
-struct IconPickerView: View {
+public struct DSIconPickerView: View {
 
     // MARK: Variables
 
     @Environment(\.dismiss) private var dismiss
+
     @Binding private var selectedIcon: String?
     @State private var searchText: String = ""
 
@@ -34,35 +35,42 @@ struct IconPickerView: View {
 
     // MARK: Initializers
 
-    init(selectedIcon: Binding<String?>) {
+    public init(selectedIcon: Binding<String?>) {
         self._selectedIcon = selectedIcon
     }
 
     // MARK: Body
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(filteredSymbols, id: \.self) { symbol in
-                        Image(systemName: symbol)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 48, height: 48)
-                            .foregroundColor(symbol == selectedIcon ? .accentColor : .primary)
-                            .onTapGesture {
-                                selectedIcon = symbol
-                                dismiss()
+            ZStack {
+                if filteredSymbols.isEmpty {
+                    DSFeedbackView(style: .warning,
+                                   title: "no_icons_found".localized)
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 16) {
+                            ForEach(filteredSymbols, id: \.self) { symbol in
+                                Image(systemName: symbol)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 48, height: 48)
+                                    .foregroundColor(symbol == selectedIcon ? .accentColor : .primary)
+                                    .onTapGesture {
+                                        selectedIcon = symbol
+                                        dismiss()
+                                    }
                             }
+                        }
+                        .padding(.horizontal)
                     }
                 }
-                .padding(.horizontal)
             }
-            .navigationTitle("Seleccionar icono")
+            .navigationTitle("select_icon".localized)
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.gray.opacity(0.1))
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button(action: {
                         dismiss()
                     }) {
@@ -74,7 +82,7 @@ struct IconPickerView: View {
                             .font(.title2)
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button(action: {
                         dismiss()
                     }) {
@@ -89,15 +97,13 @@ struct IconPickerView: View {
             }
             .searchable(text: $searchText,
                         placement: .navigationBarDrawer(displayMode: .automatic),
-                        prompt: "Buscar icono")
+                        prompt: "search_icon".localized)
         }
     }
 }
 
 // MARK: Preview
 
-#if DEBUG
 #Preview {
-    IconPickerView(selectedIcon: .constant("heart.fill"))
+    DSIconPickerView(selectedIcon: .constant("heart.fill"))
 }
-#endif

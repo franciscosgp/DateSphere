@@ -12,7 +12,7 @@ extension Error {
 
     // MARK: Variables
 
-    var message: String? {
+    var message: String {
         if let error = self as? ParseError {
             return "\(error.message)"
         } else if let error = self as? AppError {

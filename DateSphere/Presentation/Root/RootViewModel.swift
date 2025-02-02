@@ -3,6 +3,7 @@
 //  DateSphere
 //
 
+import UserNotifications
 import SwiftUI
 
 // MARK: - RootViewModel class
@@ -10,106 +11,104 @@ import SwiftUI
 @MainActor
 final class RootViewModel: ObservableObject {
 
-    // MARK: Coordinator
+    // MARK: Destination types
 
-    unowned var coordinator: MainCoordinator
-
-    // MARK: Dependencies
-
-    let getEventsUseCase: GetEventsUseCase
-    let deleteEventUseCase: DeleteEventUseCase
+    enum Destination: Hashable {
+        case detail(objectId: String?, event: EventDomainModel?)
+    }
 
     // MARK: Variables
 
-    @Published var path = NavigationPath() {
-        didSet {
-            coordinator.path = path
-        }
-    }
-    @Published var loading: Bool = false
-    @Published var events: [EventDomainModel] = []
-    @Published var error: Error?
+    let eventRepository: EventRepository
+    @Published var path = NavigationPath()
+    @Published var showAddOrEdit = false
+    var currentEvent: EventDomainModel?
+    var saveAction: ((EventDomainModel) -> Void)?
+
+    // MARK: Dependencies
+
+    private lazy var addOrUpdateEventUseCase: AddOrUpdateEventUseCase = { .init(eventRepository: eventRepository) }()
+    private lazy var getEventsUseCase: GetEventsUseCase = { .init(eventRepository: eventRepository) }()
+    private lazy var getEventUseCase: GetEventUseCase = { .init(eventRepository: eventRepository) }()
+    private lazy var deleteEventUseCase: DeleteEventUseCase = { .init(eventRepository: eventRepository) }()
 
     // MARK: Initializers
 
-    init(coordinator: MainCoordinator, getEventsUseCase: GetEventsUseCase, deleteEventUseCase: DeleteEventUseCase) {
-        self.coordinator = coordinator
-        self.getEventsUseCase = getEventsUseCase
-        self.deleteEventUseCase = deleteEventUseCase
-        coordinator.$path.assign(to: &$path)
+    init(eventRepository: EventRepository) {
+        self.eventRepository = eventRepository
     }
 
-    // MARK: Methods
+    // MARK: View models
 
-    func loadEvents() {
+    lazy var listViewModel: ListViewModel = {
+        .init(
+            useCases: .init(
+                getEventsUseCase: getEventsUseCase,
+                deleteEventUseCase: deleteEventUseCase
+            ),
+            actions: .init(
+                addEvent: { [weak self] completion in
+                    self?.addEvent()
+                    self?.saveAction = completion
+                },
+                viewEvent: { [weak self] event in
+                    self?.showEvent(event: event)
+                },
+                editEvent: { [weak self] event, completion in
+                    self?.editEvent(event: event)
+                    self?.saveAction = completion
+                }
+            )
+        )
+    }()
 
-        // Ensure that the action is not being executed
-        guard loading == false else { return }
-        loading = true
+    func getAddOrEditViewModel() -> AddOrEditViewModel {
+        .init(event: currentEvent,
+              useCase: addOrUpdateEventUseCase,
+              saveAction: saveAction)
+    }
 
-        // Prepare the use case
-        let getEventsUseCase = getEventsUseCase
+    func getDetailViewModel(objectId: String? = nil, event: EventDomainModel?) -> DetailViewModel? {
+        if let event {
+            return .init(event: event)
+        } else if let objectId {
+            return .init(objectId: objectId, useCase: getEventUseCase)
+        } else {
+            return nil
+        }
+    }
 
-        // Get events
-        Task(priority: .background) {
-            do {
-                let events = try await getEventsUseCase.execute()
-                eventsLoaded(events: events ?? [])
-            } catch {
-                eventsLoadFailed(error: error)
+    // MARK: Actions methods
+
+    func addEvent() {
+        currentEvent = nil
+        showAddOrEdit.toggle()
+    }
+
+    func editEvent(event: EventDomainModel) {
+        currentEvent = event
+        showAddOrEdit.toggle()
+    }
+
+    func showEvent(objectId: String) {
+        path.append(Destination.detail(objectId: objectId, event: nil))
+    }
+
+    func showEvent(event: EventDomainModel) {
+        path.append(Destination.detail(objectId: nil, event: event))
+    }
+
+    func requestNotificationPermission() {
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            if ![.denied].contains(settings.authorizationStatus) {
+                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
+                }
             }
         }
-
-    }
-
-    func onAddButtonTapped() {
-        coordinator.goToAddOrEditEvent()
-    }
-
-    func onEditButtonTapped(event: EventDomainModel) {
-        coordinator.goToAddOrEditEvent(event: event)
-    }
-
-    func onDetailButtonTapped(event: EventDomainModel) {
-        coordinator.goToDetail(event: event)
-    }
-
-    func onDeleteButtonTapped(event: EventDomainModel) {
-
-        // Ensure that the action is not being executed
-        guard loading == false else { return }
-        loading = true
-
-        // Prepare the use case
-        let deleteEventUseCase = deleteEventUseCase
-
-        // Delete the event
-        Task(priority: .background) {
-            do {
-                try await deleteEventUseCase.execute(event)
-                eventDeleted(event: event)
-            } catch {
-                eventsLoadFailed(error: error)
-            }
-        }
-
-    }
-
-    // MARK: Private methods
-
-    private func eventsLoaded(events: [EventDomainModel]) {
-        self.events = events
-        self.loading = false
-    }
-
-    private func eventDeleted(event: EventDomainModel) {
-        self.events = events.filter { $0 != event }
-        self.loading = false
-    }
-
-    private func eventsLoadFailed(error: Error) {
-        self.error = error
-        self.loading = false
     }
 
 }

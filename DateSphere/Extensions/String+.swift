@@ -3,6 +3,8 @@
 //  DateSphere
 //
 
+import Foundation
+
 // MARK: - [Extension] String
 
 extension String {
@@ -19,6 +21,10 @@ extension String {
         }
         guard let result = String(bytes: decrypted, encoding: .utf8) else { return nil }
         self = result
+    }
+
+    var localized: String {
+        NSLocalizedString(self, bundle: .main, comment: "")
     }
 
 }

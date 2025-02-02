@@ -13,16 +13,22 @@ let package = Package(
             name: "DSComponents",
             targets: ["DSComponents"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols", .upToNextMajor(from: "5.3.0"))
+    ],
     targets: [
         .target(
             name: "DSComponents",
+            dependencies: [
+                .product(name: "SFSafeSymbols", package: "SFSafeSymbols")
+            ],
             resources: [
-                .process("Supporting")
+                .process("Supporting/Resources")
             ]
         ),
         .testTarget(
             name: "DSComponentsTests",
             dependencies: ["DSComponents"]
-        ),
+        )
     ]
 )

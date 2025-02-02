@@ -24,144 +24,23 @@ struct RootView: View {
 
     var body: some View {
         NavigationStack(path: $viewModel.path) {
-            ZStack {
-                if viewModel.loading {
-                    getLoadingView()
-                }
-                if let error = viewModel.error {
-                    getErrorView(error: error)
-                } else if viewModel.events.isEmpty {
-                    if viewModel.loading {
-                        EmptyView()
-                    } else {
-                        getErrorView(error: RootError.noEvents)
-                    }
-                } else {
-                    List {
-                        ForEach(viewModel.events) { event in
-                            Button {
-                                viewModel.onDetailButtonTapped(event: event)
-                            } label: {
-                                getView(event: event)
-                            }
-                            .buttonStyle(.plain)
-                            .swipeActions(edge: .trailing) {
-                                Button {
-                                    viewModel.onDeleteButtonTapped(event: event)
-                                } label: {
-                                    Text("Eliminar")
-                                }
-                                .tint(.red)
-                                Button {
-                                    viewModel.onEditButtonTapped(event: event)
-                                } label: {
-                                    Text("Editar")
-                                }
-                                .tint(.yellow)
-                            }
+            ListView(viewModel: viewModel.listViewModel)
+                .navigationDestination(for: RootViewModel.Destination.self) { destination in
+                    switch destination {
+                    case .detail(let objectId, let event):
+                        if let viewModel = viewModel.getDetailViewModel(objectId: objectId, event: event) {
+                            DetailView(viewModel: viewModel)
                         }
                     }
-                    .refreshable {
-                        viewModel.loadEvents()
-                    }
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        viewModel.onAddButtonTapped()
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .foregroundColor(.accentColor)
-                    }
+                .sheet(isPresented: $viewModel.showAddOrEdit) {
+                    AddOrEditView(viewModel: viewModel.getAddOrEditViewModel())
                 }
-            }
-            .navigationDestination(for: MainCoordinator.Destination.self) { destination in
-                switch destination {
-                case .addOrEditEvent:
-                    if let viewModel = viewModel.coordinator.addOrEditEventViewModel {
-                        AddOrEditView(viewModel: viewModel)
-                    }
-                case .detail:
-                    if let viewModel = viewModel.coordinator.detailViewModel {
-                        DetailView(viewModel: viewModel)
-                    }
+                .navigationTitle("DateSphere")
+                .onAppear {
+                    viewModel.requestNotificationPermission()
                 }
-            }
-            .navigationTitle("DateSphere")
-            .onAppear {
-                viewModel.loadEvents()
-            }
-        }
-    }
-
-    // MARK: Methods
-
-    func getView(event: EventDomainModel) -> some View {
-        HStack {
-            Circle()
-                .fill(event.backgroundColor ?? .clear)
-                .frame(width: 50, height: 50)
-                .overlay {
-                    event.icon
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: event.backgroundColor == nil ? 40 : 25, height: event.backgroundColor == nil ? 40 : 25, alignment: .center)
-                        .foregroundStyle(event.foregroundColor ?? .accentColor)
-                }
-            VStack {
-                Text(event.name)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.headline)
-                    .bold()
-                Text(event.message)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.subheadline)
-            }
-        }
-    }
-
-    @ViewBuilder
-    func getLoadingView() -> some View {
-        ProgressView()
-            .progressViewStyle(.circular)
-            .scaleEffect(2)
-    }
-
-    @ViewBuilder
-    func getErrorView(error: Error) -> some View {
-        DSFeedbackView(message: error.message,
-                       button: .init(title: "Reintentar",
-                                     action: viewModel.loadEvents))
-    }
-
-    @MainActor
-    func requestNotificationPermissions() {
-        Task {
-            do {
-                let center = UNUserNotificationCenter.current()
-                let granted = try await center.requestAuthorization()
-                if granted {
-                    UIApplication.shared.registerForRemoteNotifications()
-                }
-            } catch {
-                print("Error al pedir permisos: \(error.localizedDescription)")
-            }
         }
     }
 
 }
-
-#if DEBUG
-#Preview {
-    let mockDataSource = EventDataSourceMock()
-    RootView(
-        viewModel: RootViewModel(
-            coordinator: MainCoordinator(),
-            getEventsUseCase: GetEventsUseCase(eventRepository: mockDataSource),
-            deleteEventUseCase: DeleteEventUseCase(eventRepository: mockDataSource)
-        )
-    )
-}
-#endif

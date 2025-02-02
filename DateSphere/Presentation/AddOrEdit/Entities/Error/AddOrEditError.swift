@@ -9,14 +9,14 @@ enum AddOrEditError: AppError {
 
     // MARK: Cases
 
-    case empty(parameter: String)
+    case empty(field: String)
 
     // MARK: Variables
 
-    var description: String {
+    var errorDescription: String? {
         switch self {
-        case .empty(let parameter):
-            return "El parámetro \(parameter) no puede estar vacío"
+        case .empty(let field):
+            return String(format: "empty_field_error".localized, field)
         }
     }
 

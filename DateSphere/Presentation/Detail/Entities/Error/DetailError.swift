@@ -13,10 +13,10 @@ enum DetailError: AppError {
 
     // MARK: Variables
 
-    var description: String {
+    var errorDescription: String? {
         switch self {
         case .requireUseCase:
-            return "It's required to use a GetEventUseCase"
+            return "error_required_GetEventUseCase".localized
         }
     }
 

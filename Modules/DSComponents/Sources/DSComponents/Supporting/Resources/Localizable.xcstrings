@@ -1,53 +1,56 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "feedback_error_title" : {
+    "no_icons_found" : {
+      "comment" : "DSIconPickerView",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oops! An error has occurred"
+            "value" : "No icon found"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ups! Se ha producido un error"
+            "value" : "No se encontró ningún icono"
           }
         }
       }
     },
-    "feedback_success_title" : {
+    "search_icon" : {
+      "comment" : "DSIconPickerView",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Success!"
+            "value" : "Search icon"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Operación realizada"
+            "value" : "Buscar icono"
           }
         }
       }
     },
-    "feedback_warning_title" : {
+    "select_icon" : {
+      "comment" : "DSIconPickerView",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Warning!"
+            "value" : "Select icon"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Aviso!"
+            "value" : "Seleccionar icono"
           }
         }
       }

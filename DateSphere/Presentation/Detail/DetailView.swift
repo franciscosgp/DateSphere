@@ -13,7 +13,6 @@ struct DetailView: View {
     // MARK: Variables
 
     @ObservedObject var viewModel: DetailViewModel
-    @State private var scale: CGFloat = 1.0
 
     // MARK: Initializers
 
@@ -25,29 +24,14 @@ struct DetailView: View {
 
     var body: some View {
         if let event = viewModel.event {
-            ScrollView {
+            DSCenteredScrollView {
 
-                Circle()
-                    .fill(event.backgroundColor ?? .clear)
-                    .frame(width: 200, height: 200)
-                    .overlay {
-                        event.icon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: event.backgroundColor == nil ? 180 : 100, height: event.backgroundColor == nil ? 180 : 100, alignment: .center)
-                            .foregroundStyle(event.foregroundColor ?? .accentColor)
-                            .scaleEffect(scale)
-                    }
-                    .onTapGesture {
-                        withAnimation(.interpolatingSpring(stiffness: 150, damping: 5)) {
-                            self.scale = 1.2
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation(.interpolatingSpring(stiffness: 150, damping: 5)) {
-                                self.scale = 1.0
-                            }
-                        }
-                    }
+                DSIconView(systemSymbolName: event.iconName,
+                           mainColor: event.mainColor ?? .accentColor,
+                           secondaryColor: event.secondaryColor ?? .clear,
+                           backgroundColor: event.backgroundColor ?? .clear,
+                           size: 200,
+                           bounceOnTap: true)
                     .padding()
 
                 Text(event.message)
@@ -67,29 +51,16 @@ struct DetailView: View {
             }
             .navigationTitle(event.name)
         } else if let error = viewModel.error {
-            getErrorView(error: error)
+            DSFeedbackView(title: "alert_error_title".localized,
+                           message: error.message,
+                           button: .init(title: "retry".localized,
+                                         action: viewModel.loadEvent))
         } else {
-            getLoadingView()
+            DSLoadingView(size: .large)
+                .onAppear {
+                    viewModel.loadEvent()
+                }
         }
-    }
-
-    // MARK: Methods
-
-    @ViewBuilder
-    func getLoadingView() -> some View {
-        ProgressView()
-            .progressViewStyle(.circular)
-            .scaleEffect(2)
-            .onAppear {
-                viewModel.loadEvent()
-            }
-    }
-
-    @ViewBuilder
-    func getErrorView(error: Error) -> some View {
-        DSFeedbackView(message: error.message,
-                       button: .init(title: "Reintentar",
-                                     action: viewModel.loadEvent))
     }
 
 }
@@ -99,11 +70,8 @@ struct DetailView: View {
     NavigationStack {
         DetailView(
             viewModel: DetailViewModel(
-                coordinator: MainCoordinator(),
                 objectId: "1",
-                useCase: GetEventUseCase(
-                    eventRepository: EventDataSourceMock()
-                )
+                useCase: .init(eventRepository: EventDataSourceMock())
             )
         )
     }

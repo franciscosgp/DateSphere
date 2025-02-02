@@ -15,8 +15,8 @@ extension AppError {
 
     // MARK: Variables
 
-    var errorDescription: String? {
-        return description
+    var description: String {
+        return localizedDescription
     }
 
 }

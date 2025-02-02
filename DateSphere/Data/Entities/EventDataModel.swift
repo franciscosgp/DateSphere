@@ -30,8 +30,9 @@ struct EventDataModel: ParseObject, Sendable {
     // Custom variables
     var name: String?
     var description: String?
-    var icon: String?
-    var foregroundColor: String?
+    var iconName: String?
+    var mainColor: String?
+    var secondaryColor: String?
     var backgroundColor: String?
     var date: Date?
 
@@ -47,13 +48,17 @@ struct EventDataModel: ParseObject, Sendable {
                                      original: object) {
             updated.description = object.description
         }
-        if updated.shouldRestoreKey(\.icon,
+        if updated.shouldRestoreKey(\.iconName,
                                      original: object) {
-            updated.icon = object.icon
+            updated.iconName = object.iconName
         }
-        if updated.shouldRestoreKey(\.foregroundColor,
+        if updated.shouldRestoreKey(\.mainColor,
                                      original: object) {
-            updated.foregroundColor = object.foregroundColor
+            updated.mainColor = object.mainColor
+        }
+        if updated.shouldRestoreKey(\.secondaryColor,
+                                     original: object) {
+            updated.secondaryColor = object.secondaryColor
         }
         if updated.shouldRestoreKey(\.backgroundColor,
                                      original: object) {
@@ -74,11 +79,12 @@ extension EventDataModel {
 
     // MARK: Initializers
 
-    init(name: String, description: String?, icon: String?, foregroundColor: String?, backgroundColor: String?, date: Date) {
+    init(name: String, description: String?, iconName: String?, mainColor: String?, secondaryColor: String?, backgroundColor: String?, date: Date) {
         self.name = name
         self.description = description
-        self.icon = icon
-        self.foregroundColor = foregroundColor
+        self.iconName = iconName
+        self.mainColor = mainColor
+        self.secondaryColor = secondaryColor
         self.backgroundColor = backgroundColor
         self.date = date
     }
@@ -87,8 +93,9 @@ extension EventDataModel {
         guard domainModel.objectId == nil else { throw MapperError.notAllowed(parameter: "objectId") }
         self.init(name: domainModel.name,
                   description: domainModel.description,
-                  icon: domainModel.iconName,
-                  foregroundColor: domainModel.foregroundColor?.toHex(),
+                  iconName: domainModel.iconName,
+                  mainColor: domainModel.mainColor?.toHex(),
+                  secondaryColor: domainModel.secondaryColor?.toHex(),
                   backgroundColor: domainModel.backgroundColor?.toHex(),
                   date: domainModel.date)
     }
@@ -109,8 +116,9 @@ extension EventDataModel {
         var updated = self
         updated.name = domainModel.name
         updated.description = domainModel.description
-        updated.icon = domainModel.iconName
-        updated.foregroundColor = domainModel.foregroundColor?.toHex()
+        updated.iconName = domainModel.iconName
+        updated.mainColor = domainModel.mainColor?.toHex()
+        updated.secondaryColor = domainModel.secondaryColor?.toHex()
         updated.backgroundColor = domainModel.backgroundColor?.toHex()
         updated.date = domainModel.date
         return updated
@@ -123,8 +131,9 @@ extension EventDataModel {
             objectId: objectId,
             name: name,
             description: description,
-            iconName: icon,
-            foregroundColor: Color(hex: foregroundColor),
+            iconName: iconName,
+            mainColor: Color(hex: mainColor),
+            secondaryColor: Color(hex: secondaryColor),
             backgroundColor: Color(hex: backgroundColor),
             date: date
         )
