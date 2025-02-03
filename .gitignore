@@ -60,3 +60,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Secrets
+DateSphere/Constants/Constants+Secrets.swift

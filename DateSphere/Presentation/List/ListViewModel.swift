@@ -150,13 +150,12 @@ final class ListViewModel: ObservableObject {
     }
 
     private func eventAdded(event: EventDomainModel) {
-        events.append(event)
-        events.sort { $0.date < $1.date }
+        events = (events + [event]).sorted(by: { $0.date < $1.date })
         self.loading = false
     }
 
     private func eventUpdated(event: EventDomainModel) {
-        self.events = events.map { $0.objectId == event.objectId ? event : $0 }
+        self.events = events.map { $0.objectId == event.objectId ? event : $0 }.sorted(by: { $0.date < $1.date })
         self.loading = false
     }
 

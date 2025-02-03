@@ -48,7 +48,7 @@ final actor EventDataSourceMock: EventRepository {
 
     func getEvents() async throws -> [EventDomainModel] {
         try? await Task.sleep(nanoseconds: randomDelay)
-        return mockEvents
+        return mockEvents.sorted(by: { $0.date < $1.date })
     }
 
     func getEvent(by objectId: String) async throws -> EventDomainModel {
@@ -90,4 +90,5 @@ final actor EventDataSourceMock: EventRepository {
     }
 
 }
+
 #endif

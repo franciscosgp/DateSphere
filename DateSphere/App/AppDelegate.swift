@@ -11,6 +11,10 @@ import UserNotifications
 
 final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUserNotificationCenterDelegate {
 
+    // MARK: Dependencies
+
+    var installationRepository: InstallationRepository?
+
     // MARK: Variables
 
     var firstNotification: Bool = true
@@ -25,9 +29,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUser
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Task(priority: .background) {
-            let dataSource = InstallationDataSource()
-            try? await RegisterInstallationUseCase(installationRepository: dataSource).execute(deviceToken)
+        if let repository = installationRepository {
+            Task(priority: .background) {
+                try? await RegisterInstallationUseCase(installationRepository: repository).execute(deviceToken)
+            }
         }
     }
 
