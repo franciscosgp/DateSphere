@@ -11,6 +11,11 @@ import UserNotifications
 
 final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUserNotificationCenterDelegate {
 
+    // MARK: Variables
+
+    var firstNotification: Bool = true
+    var launchNotification: [AnyHashable: Any]?
+
     // MARK: Methods
 
     func application(_ application: UIApplication,
@@ -28,11 +33,27 @@ final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUser
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}
 
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        return [.sound, .list, .banner]
+    }
+
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        NotificationCenter.default.post(name: .openFromNotification, object: userInfo)
+        completionHandler(.newData)
+    }
+
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        NotificationCenter.default.post(name: .openFromNotification, object: userInfo)
+        if firstNotification {
+            firstNotification = false
+            launchNotification = userInfo
+        } else {
+            NotificationCenter.default.post(name: .openFromNotification, object: userInfo)
+        }
         completionHandler()
     }
 

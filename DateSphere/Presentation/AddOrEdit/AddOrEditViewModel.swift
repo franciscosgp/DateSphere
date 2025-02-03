@@ -70,11 +70,11 @@ final class AddOrEditViewModel: ObservableObject {
         let event = EventDomainModel(
             objectId: event?.objectId,
             name: name,
-            description: description.isEmpty ? nil : description,
+            description: description.isEmpty ? "" : description,
             iconName: iconName,
             mainColor: mainColor,
-            secondaryColor: secondaryColor,
-            backgroundColor: backgroundColor.isClear ? nil : backgroundColor,
+            secondaryColor: secondaryColor.isClear ? .clear : secondaryColor,
+            backgroundColor: backgroundColor.isClear ? .clear : backgroundColor,
             date: date
         )
 

@@ -101,12 +101,23 @@ final class RootViewModel: ObservableObject {
     func requestNotificationPermission() {
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { settings in
-            if ![.denied].contains(settings.authorizationStatus) {
-                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
-                    DispatchQueue.main.async {
-                        UIApplication.shared.registerForRemoteNotifications()
+            switch settings.authorizationStatus {
+            case .authorized, .provisional:
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            case .notDetermined:
+                center.requestAuthorization(options: [.alert, .sound]) { granted, _ in
+                    if granted {
+                        DispatchQueue.main.async {
+                            UIApplication.shared.registerForRemoteNotifications()
+                        }
                     }
                 }
+            case .denied, .ephemeral:
+                break
+            @unknown default:
+                break
             }
         }
     }
