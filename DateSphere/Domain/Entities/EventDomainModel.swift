@@ -20,6 +20,7 @@ struct EventDomainModel: Hashable, Equatable, Sendable {
     let secondaryColor: Color?
     let backgroundColor: Color?
     let date: Date
+    let counter: Double
 
     var message: String {
         if date.isToday {
@@ -32,6 +33,17 @@ struct EventDomainModel: Hashable, Equatable, Sendable {
             return String(format: "days_left".localized, String(date.numberOfDays))
         } else {
             return String(format: "days_ago".localized, String(date.numberOfDays))
+        }
+    }
+
+    var milestonesMessage: String {
+        switch counter {
+        case .zero:
+            return "no_milestones".localized
+        case 1:
+            return "one_milestone".localized
+        default:
+            return String(format: "several_milestones".localized, counter)
         }
     }
 
@@ -55,7 +67,7 @@ extension EventDomainModel {
 
     // MARK: Initializers
 
-    init(name: String, description: String?, iconName: String?, mainColor: Color?, secondaryColor: Color?, backgroundColor: Color?, date: Date) {
+    init(name: String, description: String?, iconName: String?, mainColor: Color?, secondaryColor: Color?, backgroundColor: Color?, date: Date, counter: Double) {
         self.objectId = nil
         self.name = name
         self.description = description
@@ -64,6 +76,7 @@ extension EventDomainModel {
         self.secondaryColor = secondaryColor
         self.backgroundColor = backgroundColor
         self.date = date
+        self.counter = counter
     }
 
 }

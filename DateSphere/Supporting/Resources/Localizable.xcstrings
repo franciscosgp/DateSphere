@@ -318,6 +318,40 @@
         }
       }
     },
+    "milestones" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Milestones"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hitos"
+          }
+        }
+      }
+    },
+    "milestones_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value: %.0f"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valor: %.0f"
+          }
+        }
+      }
+    },
     "name" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -399,6 +433,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puedes añadir uno pulsando en el botón \"+\"."
+          }
+        }
+      }
+    },
+    "no_milestones" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No milestones"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin hitos"
+          }
+        }
+      }
+    },
+    "one_milestone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One milestone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un hito"
           }
         }
       }
@@ -501,6 +569,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleccionar icono"
+          }
+        }
+      }
+    },
+    "several_milestones" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.0f milestones"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.0f hitos"
           }
         }
       }

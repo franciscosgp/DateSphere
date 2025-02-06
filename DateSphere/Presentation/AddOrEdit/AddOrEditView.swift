@@ -71,6 +71,10 @@ struct AddOrEditView: View {
                     DatePicker("event_date", selection: $viewModel.date, displayedComponents: .date)
                 }
 
+                Section(header: Text("milestones")) {
+                    Stepper(String(format: "milestones_number".localized, viewModel.milestones), value: $viewModel.milestones, in: 0...100)
+                }
+
             }
             .disabled(viewModel.isLoading)
             .scrollDismissesKeyboard(.immediately)

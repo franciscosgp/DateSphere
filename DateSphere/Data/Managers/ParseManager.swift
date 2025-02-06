@@ -11,17 +11,17 @@ protocol ParseManagerProtocol {
 
     // MARK: Methods
 
-    func initialize() async
+    func initialize()
 
 }
 
 // MARK: - ParseManager class
 
-final actor ParseManager: ParseManagerProtocol {
+final class ParseManager: ParseManagerProtocol {
 
     // MARK: Methods
 
-    func initialize() async {
+    func initialize() {
         ParseSwift.initialize(
             applicationId: Constants.Parse.applicationId,
             clientKey: Constants.Parse.clientKey,
@@ -35,11 +35,11 @@ final actor ParseManager: ParseManagerProtocol {
 
 // MARK: - ParseManagerMock class
 
-final actor ParseManagerMock: ParseManagerProtocol {
+final class ParseManagerMock: ParseManagerProtocol {
 
     // MARK: Methods
 
-    func initialize() async {}
+    func initialize() {}
 
 }
 

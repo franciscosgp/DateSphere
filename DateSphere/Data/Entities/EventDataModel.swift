@@ -35,6 +35,7 @@ struct EventDataModel: ParseObject, Sendable {
     var secondaryColor: String?
     var backgroundColor: String?
     var date: Date?
+    var counter: Double?
 
     // MARK: Methods
 
@@ -68,6 +69,10 @@ struct EventDataModel: ParseObject, Sendable {
                                      original: object) {
             updated.date = object.date
         }
+        if updated.shouldRestoreKey(\.counter,
+                                     original: object) {
+            updated.counter = object.counter
+        }
         return updated
     }
 
@@ -79,7 +84,7 @@ extension EventDataModel {
 
     // MARK: Initializers
 
-    init(name: String, description: String?, iconName: String?, mainColor: String?, secondaryColor: String?, backgroundColor: String?, date: Date) {
+    init(name: String, description: String?, iconName: String?, mainColor: String?, secondaryColor: String?, backgroundColor: String?, date: Date, counter: Double) {
         self.name = name
         self.description = description
         self.iconName = iconName
@@ -87,6 +92,7 @@ extension EventDataModel {
         self.secondaryColor = secondaryColor
         self.backgroundColor = backgroundColor
         self.date = date
+        self.counter = counter
     }
 
     init(with domainModel: EventDomainModel) throws {
@@ -97,7 +103,8 @@ extension EventDataModel {
                   mainColor: domainModel.mainColor?.toHex(),
                   secondaryColor: domainModel.secondaryColor?.toHex(),
                   backgroundColor: domainModel.backgroundColor?.toHex(),
-                  date: domainModel.date)
+                  date: domainModel.date,
+                  counter: domainModel.counter)
     }
 
     init(objectId: String?) {
@@ -121,6 +128,7 @@ extension EventDataModel {
         updated.secondaryColor = domainModel.secondaryColor?.toHex()
         updated.backgroundColor = domainModel.backgroundColor?.toHex()
         updated.date = domainModel.date
+        updated.counter = domainModel.counter
         return updated
     }
 
@@ -135,7 +143,8 @@ extension EventDataModel {
             mainColor: Color(hex: mainColor),
             secondaryColor: Color(hex: secondaryColor),
             backgroundColor: Color(hex: backgroundColor),
-            date: date
+            date: date,
+            counter: counter ?? .zero
         )
     }
 

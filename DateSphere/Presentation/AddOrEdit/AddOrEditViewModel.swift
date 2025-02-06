@@ -25,6 +25,7 @@ final class AddOrEditViewModel: ObservableObject {
     @Published var secondaryColor: Color
     @Published var backgroundColor: Color
     @Published var date: Date
+    @Published var milestones: Double
 
     // State
     var event: EventDomainModel?
@@ -49,6 +50,7 @@ final class AddOrEditViewModel: ObservableObject {
         secondaryColor = event?.secondaryColor ?? .clear
         backgroundColor = event?.backgroundColor ?? .clear
         date = event?.date ?? Date()
+        milestones = event?.counter ?? .zero
 
     }
 
@@ -75,7 +77,8 @@ final class AddOrEditViewModel: ObservableObject {
             mainColor: mainColor,
             secondaryColor: secondaryColor.isClear ? .clear : secondaryColor,
             backgroundColor: backgroundColor.isClear ? .clear : backgroundColor,
-            date: date
+            date: date,
+            counter: milestones
         )
 
         // Add or update the event

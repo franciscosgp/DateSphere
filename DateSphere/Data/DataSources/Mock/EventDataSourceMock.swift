@@ -34,10 +34,10 @@ final actor EventDataSourceMock: EventRepository {
     // MARK: Variables
 
     var mockEvents: [EventDomainModel] = [
-        .init(objectId: "0", name: "Event 1", description: "Event description 1", iconName: "rublesign.square", mainColor: .brown, secondaryColor: .clear, backgroundColor: .yellow, date: Date(timeIntervalSinceNow: 10_000_000)),
-        .init(objectId: "1", name: "Event 2", description: "Event description 2", iconName: "hand.tap", mainColor: .red, secondaryColor: .clear, backgroundColor: .orange, date: Date(timeIntervalSinceNow: -10_000_000)),
-        .init(objectId: "2", name: "Event 3", description: "Event description 3", iconName: "hifispeaker.and.homepod.fill", mainColor: .blue, secondaryColor: .clear, backgroundColor: .pink, date: Date(timeIntervalSinceNow: 5_000_000)),
-        .init(objectId: "3", name: "Event 4", description: "Event description 4", iconName: "headphones", mainColor: .cyan, secondaryColor: .clear, backgroundColor: .gray, date: Date())
+        .init(objectId: "0", name: "Event 1", description: "Event description 1", iconName: "rublesign.square", mainColor: .brown, secondaryColor: .clear, backgroundColor: .yellow, date: Date(timeIntervalSinceNow: 10_000_000), counter: 1),
+        .init(objectId: "1", name: "Event 2", description: "Event description 2", iconName: "hand.tap", mainColor: .red, secondaryColor: .clear, backgroundColor: .orange, date: Date(timeIntervalSinceNow: -10_000_000), counter: 2),
+        .init(objectId: "2", name: "Event 3", description: "Event description 3", iconName: "hifispeaker.and.homepod.fill", mainColor: .blue, secondaryColor: .clear, backgroundColor: .pink, date: Date(timeIntervalSinceNow: 5_000_000), counter: 3),
+        .init(objectId: "3", name: "Event 4", description: "Event description 4", iconName: "headphones", mainColor: .cyan, secondaryColor: .clear, backgroundColor: .gray, date: Date(), counter: 0)
     ]
 
     var randomDelay: UInt64 {
@@ -71,7 +71,8 @@ final actor EventDataSourceMock: EventRepository {
                 mainColor: event.mainColor,
                 secondaryColor: event.secondaryColor,
                 backgroundColor: event.backgroundColor,
-                date: event.date
+                date: event.date,
+                counter: event.counter
             )
             mockEvents.append(newEvent)
             return newEvent

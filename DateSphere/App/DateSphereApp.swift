@@ -14,9 +14,9 @@ struct DateSphereApp: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.scenePhase) private var scenePhase
-    @StateObject var viewModel = RootViewModel(eventRepository: EventDataSourceMock())
-    let parseManager: ParseManagerProtocol = ParseManagerMock()
-    let installationRepository: InstallationRepository = InstallationDataSourceMock()
+    @StateObject var viewModel = RootViewModel(eventRepository: EventDataSource())
+    let parseManager: ParseManagerProtocol = ParseManager()
+    let installationRepository: InstallationRepository = InstallationDataSource()
 
     // MARK: Body
 
@@ -24,12 +24,8 @@ struct DateSphereApp: App {
         WindowGroup {
             RootView(viewModel: viewModel)
                 .onAppear {
-                    Task { [parseManager] in
-                        await parseManager.initialize()
-                        await MainActor.run {
-                            appDelegate.installationRepository = installationRepository
-                        }
-                    }
+                    parseManager.initialize()
+                    appDelegate.installationRepository = installationRepository
                 }
                 .onChange(of: scenePhase) { newPhase in
                     if newPhase == .active,

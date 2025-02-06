@@ -110,6 +110,19 @@ struct ListView: View {
                     .font(.subheadline)
                     .foregroundColor(.primary)
             }
+            if event.counter > 0 {
+                Circle()
+                    .fill(.red)
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .overlay {
+                        Text(String(Int(event.counter)))
+                            .font(.subheadline)
+                            .foregroundStyle(Color.white)
+                            .frame(width: 24, height: 24, alignment: .center)
+                    }
+            }
+
         }
     }
 

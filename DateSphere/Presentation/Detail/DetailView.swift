@@ -36,11 +36,23 @@ struct DetailView: View {
 
                 Text(event.message)
                     .font(.title)
-                    .padding()
+                    .padding(.top)
 
                 Text(event.date.dateFormatted)
                     .font(.title2)
-                    .padding()
+                    .padding(.top)
+
+                if event.counter > 0 {
+                    Text(event.milestonesMessage)
+                        .font(.headline)
+                        .foregroundStyle(Color.white)
+                        .padding(.all, 6)
+                        .background {
+                            Color.red
+                                .cornerRadius(8)
+                        }
+                        .padding(.top)
+                }
 
                 if let description = event.description {
                     Text(description)
