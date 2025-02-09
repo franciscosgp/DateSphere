@@ -70,7 +70,7 @@ final class RootViewModel: ObservableObject {
 
     func getDetailViewModel(objectId: String? = nil, event: EventDomainModel?) -> DetailViewModel? {
         if let event {
-            return .init(event: event)
+            return .init(event: event, useCase: getEventUseCase)
         } else if let objectId {
             return .init(objectId: objectId, useCase: getEventUseCase)
         } else {

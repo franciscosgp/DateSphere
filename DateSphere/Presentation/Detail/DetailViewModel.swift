@@ -26,20 +26,22 @@ final class DetailViewModel: ObservableObject {
     init(objectId: String, useCase: GetEventUseCase) {
         self.getEventUseCase = useCase
         self.objectId = objectId
+        setup()
     }
 
-    init(event: EventDomainModel) {
-        self.getEventUseCase = nil
+    init(event: EventDomainModel, useCase: GetEventUseCase?) {
+        self.getEventUseCase = useCase
         self.objectId = event.objectId ?? event.id
         self.event = event
+        setup()
     }
 
     // MARK: Methods
 
-    func loadEvent() {
+    func loadEvent(forceLoad: Bool = false) {
 
         // Ensure the event is not already loaded
-        guard event == nil else { return }
+        guard forceLoad || event == nil else { return }
 
         // Ensure the use case is available
         guard let getEventUseCase = self.getEventUseCase else {
@@ -48,7 +50,7 @@ final class DetailViewModel: ObservableObject {
         }
 
         // Prepare objectId in environment
-        let objectId = objectId
+        let objectId = event?.objectId ?? objectId
 
         // Reset error state
         error = nil
@@ -66,6 +68,17 @@ final class DetailViewModel: ObservableObject {
     }
 
     // MARK: Private methods
+
+    func setup() {
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived), name: .notificationReceived, object: nil)
+    }
+
+    @objc func notificationReceived(_ notification: Notification) {
+        if let eventObjectId = (notification.object as?[AnyHashable: Any])?[Constants.NotificationFields.eventId] as? String,
+           (event?.objectId ?? objectId) == eventObjectId {
+            loadEvent(forceLoad: true)
+        }
+    }
 
     private func eventLoaded(event: EventDomainModel?) {
         self.event = event

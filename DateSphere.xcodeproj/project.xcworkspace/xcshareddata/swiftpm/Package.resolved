@@ -1,15 +1,6 @@
 {
-  "originHash" : "f63739fa2f310d0d79b3d80f8a71233809792657a095b4dd683975fc2bc35ce3",
+  "originHash" : "253a8c8f4c0a87bf01b3c7794a033fe5e3011f2aafb239fcf85d358e621f74e9",
   "pins" : [
-    {
-      "identity" : "flex",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/FLEXTool/FLEX.git",
-      "state" : {
-        "revision" : "e0acf59d06d498041f65bbea1e5914b6e4b39733",
-        "version" : "5.22.10"
-      }
-    },
     {
       "identity" : "parse-swift",
       "kind" : "remoteSourceControl",

@@ -66,7 +66,7 @@ struct DetailView: View {
             DSFeedbackView(title: "alert_error_title".localized,
                            message: error.message,
                            button: .init(title: "retry".localized,
-                                         action: viewModel.loadEvent))
+                                         action: { viewModel.loadEvent() }))
         } else {
             DSLoadingView(size: .large)
                 .onAppear {

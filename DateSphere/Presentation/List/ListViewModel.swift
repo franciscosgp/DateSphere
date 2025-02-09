@@ -63,6 +63,7 @@ final class ListViewModel: ObservableObject {
         Task {
             await self.loadEvents()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived), name: .notificationReceived, object: nil)
     }
 
     // MARK: Methods
@@ -144,6 +145,15 @@ final class ListViewModel: ObservableObject {
 
     // MARK: Private methods
 
+    @objc func notificationReceived(_ notification: Notification) {
+        if let eventObjectId = (notification.object as?[AnyHashable: Any])?[Constants.NotificationFields.eventId] as? String,
+           !AppDelegate.shared.isLastActionPerfomedByUser(for: eventObjectId) {
+            Task {
+                await loadEvents(showLoading: false)
+            }
+        }
+    }
+
     private func eventsLoaded(events: [EventDomainModel]) {
         self.events = events
         self.loading = false
@@ -152,16 +162,19 @@ final class ListViewModel: ObservableObject {
     private func eventAdded(event: EventDomainModel) {
         events = (events + [event]).sorted(by: { $0.date < $1.date })
         self.loading = false
+        AppDelegate.shared.updateLastAction(event: event)
     }
 
     private func eventUpdated(event: EventDomainModel) {
         self.events = events.map { $0.objectId == event.objectId ? event : $0 }.sorted(by: { $0.date < $1.date })
         self.loading = false
+        AppDelegate.shared.updateLastAction(event: event)
     }
 
     private func eventDeleted(event: EventDomainModel) {
         self.events = events.filter { $0 != event }
         self.loading = false
+        AppDelegate.shared.updateLastAction(event: event)
     }
 
     private func eventsLoadFailed(error: Error) {

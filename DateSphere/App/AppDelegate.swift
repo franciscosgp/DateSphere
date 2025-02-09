@@ -11,6 +11,13 @@ import UserNotifications
 
 final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUserNotificationCenterDelegate {
 
+    static private(set) var shared: AppDelegate!
+
+    override init() {
+        super.init()
+        AppDelegate.shared = self
+    }
+
     // MARK: Dependencies
 
     var installationRepository: InstallationRepository?
@@ -19,6 +26,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUser
 
     var firstNotification: Bool = true
     var launchNotification: [AnyHashable: Any]?
+    private var lastAction: Date?
+    private var eventAction: EventDomainModel?
 
     // MARK: Methods
 
@@ -39,7 +48,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUser
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
-        return [.sound, .list, .banner]
+        NotificationCenter.default.post(name: .notificationReceived, object: notification.request.content.userInfo)
+        if let eventObjectId = notification.request.content.userInfo[Constants.NotificationFields.eventId] as? String,
+           isLastActionPerfomedByUser(for: eventObjectId) {
+            return []
+        } else {
+            return [.sound, .list, .banner]
+        }
     }
 
     func application(_ application: UIApplication,
@@ -60,6 +75,19 @@ final class AppDelegate: NSObject, UIApplicationDelegate, @preconcurrency UNUser
             NotificationCenter.default.post(name: .openFromNotification, object: userInfo)
         }
         completionHandler()
+    }
+
+    func isLastActionPerfomedByUser(for eventObjectId: String) -> Bool {
+        if let lastAction, lastAction.timeIntervalSinceNow < 5, eventAction?.objectId == eventObjectId {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    func updateLastAction(event: EventDomainModel?) {
+        lastAction = .now
+        eventAction = event
     }
 
 }
