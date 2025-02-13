@@ -20,7 +20,7 @@ struct EventDomainModel: Hashable, Equatable, Sendable {
     let secondaryColor: Color?
     let backgroundColor: Color?
     let date: Date
-    let counter: Double
+    var counter: Double
 
     var message: String {
         if date.isToday {

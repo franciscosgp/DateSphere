@@ -31,8 +31,8 @@ final class ListViewModel: ObservableObject {
 
     // MARK: Dependencies
 
-    let useCases: UseCases
-    let actions: Actions
+    private let useCases: UseCases
+    private let actions: Actions
 
     // MARK: Variables
 

@@ -72,7 +72,7 @@ struct AddOrEditView: View {
                 }
 
                 Section(header: Text("milestones")) {
-                    Stepper(String(format: "milestones_number".localized, viewModel.milestones), value: $viewModel.milestones, in: 0...100)
+                    Stepper(String(format: "milestones_number".localized, viewModel.milestones), value: $viewModel.milestones, in: 0...1000)
                 }
 
             }

@@ -69,10 +69,14 @@ final class RootViewModel: ObservableObject {
     }
 
     func getDetailViewModel(objectId: String? = nil, event: EventDomainModel?) -> DetailViewModel? {
+        let useCases: DetailViewModel.UseCases = .init(
+            getEventUseCase: getEventUseCase,
+            addOrUpdateEventUseCase: addOrUpdateEventUseCase
+        )
         if let event {
-            return .init(event: event, useCase: getEventUseCase)
+            return .init(event: event, useCases: useCases, saveAction: saveAction)
         } else if let objectId {
-            return .init(objectId: objectId, useCase: getEventUseCase)
+            return .init(objectId: objectId, useCases: useCases, saveAction: saveAction)
         } else {
             return nil
         }

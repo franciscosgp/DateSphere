@@ -42,16 +42,52 @@ struct DetailView: View {
                     .font(.title2)
                     .padding(.top)
 
-                if event.counter > 0 {
-                    Text(event.milestonesMessage)
-                        .font(.headline)
-                        .foregroundStyle(Color.white)
-                        .padding(.all, 6)
-                        .background {
-                            Color.red
-                                .cornerRadius(8)
+                ZStack {
+
+                    HStack(alignment: .center) {
+
+                        Button {
+                            viewModel.updateCounter(withIncrement: -1)
+                        } label: {
+                            Image(systemName: "minus")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(viewModel.disableMinusAction ? .gray : .red)
                         }
-                        .padding(.top)
+                        .padding(.top, 12)
+                        .padding(.horizontal)
+                        .disabled(viewModel.disableMinusAction)
+
+                        Text(event.milestonesMessage)
+                            .font(.headline)
+                            .foregroundStyle(Color.white)
+                            .padding(.all, 6)
+                            .background {
+                                Color.red
+                                    .cornerRadius(8)
+                            }
+                            .padding(.top)
+
+                        Button {
+                            viewModel.updateCounter(withIncrement: 1)
+                        } label: {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(viewModel.disablePlusAction ? .gray : .red)
+                        }
+                        .padding(.top, 12)
+                        .padding(.horizontal)
+                        .disabled(viewModel.disablePlusAction)
+
+                    }
+
+                    if viewModel.isUpdating {
+                        DSLoadingView(size: .small)
+                            .padding(.top, 12)
+                    }
                 }
 
                 if let description = event.description {
@@ -79,11 +115,16 @@ struct DetailView: View {
 
 #if DEBUG
 #Preview {
+    let dataSource = EventDataSourceMock()
     NavigationStack {
         DetailView(
             viewModel: DetailViewModel(
                 objectId: "1",
-                useCase: .init(eventRepository: EventDataSourceMock())
+                useCases: .init(
+                    getEventUseCase: .init(eventRepository: dataSource),
+                    addOrUpdateEventUseCase: .init(eventRepository: dataSource)
+                ),
+                saveAction: { _ in }
             )
         )
     }

@@ -11,9 +11,16 @@ import SwiftUI
 @MainActor
 final class DetailViewModel: ObservableObject {
 
+    // MARK: Use cases
+
+    struct UseCases {
+        let getEventUseCase: GetEventUseCase
+        let addOrUpdateEventUseCase: AddOrUpdateEventUseCase
+    }
+
     // MARK: Dependencies
 
-    private let getEventUseCase: GetEventUseCase?
+    private let useCases: UseCases?
 
     // MARK: Variables
 
@@ -21,18 +28,34 @@ final class DetailViewModel: ObservableObject {
     @Published var event: EventDomainModel?
     @Published var error: Error?
 
+    @Published var isUpdating: Bool = false
+    @Published var updatingError: Error?
+    let saveAction: ((EventDomainModel) -> Void)?
+
+    var disableMinusAction: Bool {
+        guard !isUpdating, let event else { return true }
+        return event.counter <= 0
+    }
+
+    var disablePlusAction: Bool {
+        guard !isUpdating, let event else { return true }
+        return event.counter >= 1000
+    }
+
     // MARK: Initializers
 
-    init(objectId: String, useCase: GetEventUseCase) {
-        self.getEventUseCase = useCase
+    init(objectId: String, useCases: UseCases, saveAction: ((EventDomainModel) -> Void)?) {
+        self.useCases = useCases
         self.objectId = objectId
+        self.saveAction = saveAction
         setup()
     }
 
-    init(event: EventDomainModel, useCase: GetEventUseCase?) {
-        self.getEventUseCase = useCase
+    init(event: EventDomainModel, useCases: UseCases?, saveAction: ((EventDomainModel) -> Void)?) {
+        self.useCases = useCases
         self.objectId = event.objectId ?? event.id
         self.event = event
+        self.saveAction = saveAction
         setup()
     }
 
@@ -44,7 +67,7 @@ final class DetailViewModel: ObservableObject {
         guard forceLoad || event == nil else { return }
 
         // Ensure the use case is available
-        guard let getEventUseCase = self.getEventUseCase else {
+        guard let getEventUseCase = self.useCases?.getEventUseCase else {
             self.error = DetailError.requireUseCase
             return
         }
@@ -62,6 +85,38 @@ final class DetailViewModel: ObservableObject {
                 self?.eventLoaded(event: event)
             } catch {
                 self?.eventLoadFailed(error: error)
+            }
+        }
+
+    }
+
+    func updateCounter(withIncrement increment: Double) {
+
+        // Ensure the use case is available
+        guard let addOrUpdateEventUseCase = self.useCases?.addOrUpdateEventUseCase else {
+            self.error = DetailError.requireUseCase
+            return
+        }
+
+        // Ensure event
+        guard var event = event else {
+            return
+        }
+
+        // Ensure that the action is not being executed
+        guard isUpdating == false else { return }
+        isUpdating = true
+
+        // Update counter
+        event.counter += increment
+
+        // Update the event
+        Task(priority: .background) { [weak self] in
+            do {
+                let newEvent = try await addOrUpdateEventUseCase.execute(event)
+                self?.eventUpdated(event: newEvent)
+            } catch {
+                self?.eventUpdateFailed(error: error)
             }
         }
 
@@ -86,6 +141,19 @@ final class DetailViewModel: ObservableObject {
 
     private func eventLoadFailed(error: Error) {
         self.error = error
+    }
+
+    private func eventUpdated(event: EventDomainModel?) {
+        self.event = event
+        isUpdating = false
+        if let event {
+            saveAction?(event)
+        }
+    }
+
+    private func eventUpdateFailed(error: Error) {
+        updatingError = error
+        isUpdating = false
     }
 
 }
