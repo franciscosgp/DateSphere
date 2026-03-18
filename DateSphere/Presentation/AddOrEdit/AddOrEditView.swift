@@ -5,6 +5,9 @@
 
 import DSComponents
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 // MARK: AddOrEdit view
 
@@ -90,6 +93,9 @@ struct AddOrEditView: View {
                         DSLoadingView(size: .small)
                     } else {
                         Button("save") {
+                            #if canImport(UIKit)
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            #endif
                             viewModel.addOrUpdateEvent()
                         }
                     }

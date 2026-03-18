@@ -5,7 +5,7 @@
 
 import Foundation
 @preconcurrency import ParseSwift
-import SwiftUICore
+import SwiftUI
 
 // MARK: - EventDataModel struct
 

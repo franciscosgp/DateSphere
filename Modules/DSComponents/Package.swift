@@ -14,7 +14,7 @@ let package = Package(
             targets: ["DSComponents"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols", .upToNextMajor(from: "5.3.0"))
+        .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols", .upToNextMajor(from: "7.0.0"))
     ],
     targets: [
         .target(

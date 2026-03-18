@@ -24,18 +24,25 @@ public struct DSCenteredScrollView<Content: View>: View {
 
     public var body: some View {
         GeometryReader { geometry in
-            ScrollView(isScrollEnabled ? .vertical : []) {
-                content
-                    .frame(minHeight: geometry.size.height)
+            ScrollView(.vertical) {
+                VStack(spacing: 0) {
+                    content
+                }
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: geometry.size.height)
                     .background(
                         GeometryReader { contentGeometry in
                             Color.clear
                                 .onAppear {
                                     isScrollEnabled = contentGeometry.size.height > geometry.size.height
                                 }
+                                .onChange(of: contentGeometry.size.height) { newValue in
+                                    isScrollEnabled = newValue > geometry.size.height
+                                }
                         }
                     )
             }
+            .scrollDisabled(!isScrollEnabled)
         }
     }
 

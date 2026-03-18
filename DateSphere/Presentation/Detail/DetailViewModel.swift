@@ -146,6 +146,7 @@ final class DetailViewModel: ObservableObject {
     private func eventUpdated(event: EventDomainModel?) {
         self.event = event
         isUpdating = false
+        AppDelegate.shared.updateLastAction(event: event)
         if let event {
             saveAction?(event)
         }

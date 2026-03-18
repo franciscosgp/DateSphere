@@ -4,7 +4,7 @@
 //
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 
 // MARK: - EventDomainModel struct
 

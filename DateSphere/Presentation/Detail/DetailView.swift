@@ -5,6 +5,9 @@
 
 import DSComponents
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 // MARK: Detail view
 
@@ -47,6 +50,9 @@ struct DetailView: View {
                     HStack(alignment: .center) {
 
                         Button {
+                            #if canImport(UIKit)
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            #endif
                             viewModel.updateCounter(withIncrement: -1)
                         } label: {
                             Image(systemName: "minus")
@@ -70,6 +76,9 @@ struct DetailView: View {
                             .padding(.top)
 
                         Button {
+                            #if canImport(UIKit)
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            #endif
                             viewModel.updateCounter(withIncrement: 1)
                         } label: {
                             Image(systemName: "plus")
@@ -96,6 +105,11 @@ struct DetailView: View {
                         .padding()
                 }
 
+            }
+            .onAppear {
+                #if canImport(UIKit)
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                #endif
             }
             .navigationTitle(event.name)
         } else if let error = viewModel.error {

@@ -4,7 +4,7 @@
 //
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 
 #if DEBUG
 
@@ -41,7 +41,7 @@ final actor EventDataSourceMock: EventRepository {
     ]
 
     var randomDelay: UInt64 {
-        return UInt64(Double.random(in: 0.5...2.0) * 1_000_000_000)
+        return UInt64(Double.random(in: 0.5...1.0) * 1_000_000_000)
     }
 
     // MARK: Methods

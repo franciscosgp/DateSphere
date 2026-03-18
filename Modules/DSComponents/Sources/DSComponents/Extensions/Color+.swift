@@ -4,7 +4,7 @@
 //
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 import UIKit.UIColor
 
 // MARK: - [Extension] Color

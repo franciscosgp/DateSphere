@@ -4,6 +4,9 @@
 //
 
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 // MARK: - DSBounceAnimationOnTapViewModifier struct
 
@@ -32,6 +35,9 @@ public struct DSBounceAnimationOnTapViewModifier: ViewModifier {
                     withAnimation(.interpolatingSpring(stiffness: 150, damping: 5)) {
                         self.scale = self.maxScale
                     }
+                    #if canImport(UIKit)
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    #endif
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         withAnimation(.interpolatingSpring(stiffness: 150, damping: 5)) {
                             self.scale = 1.0
